@@ -13,7 +13,7 @@
     <input type="text" value="{{ Auth::user()->id}}" id="user_id" hidden>
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Upload Answer</h5>
+            <h5 class="card-title">Upload File</h5>
         </div>
         <div class="card-content">
             <div class="card-body">
@@ -23,18 +23,6 @@
             </div>
         </div>
     </div>
-    {{-- <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Upload Students Answer</h5>
-        </div>
-        <div class="card-content">
-            <div class="card-body">
-                <!-- Basic file uploader -->
-                <input type="file" class="students-answer">
-                <button type="submit" class="btn btn-info" id='btn-studentsAnswer' disabled>Submit Form</button>
-            </div>
-        </div>
-    </div> --}}
 </div>
 @endsection
 
@@ -99,7 +87,7 @@
         formData.append('user_id', user_id);
         // set ajax
         $.ajax({
-            url : 'http://127.0.0.1:5000/upload-kunci-jawaban',
+            url : 'http://127.0.0.1:5000/check-plagiarism',
             type: 'POST',
             contentType: false,
             processData: false,
@@ -114,35 +102,6 @@
                 backgroundColor: "#4fbe87",
             }).showToast();
             console.log(res)
-        }).catch((res)=> {
-            console.log(res)
-        });
-    });
-
-    $('#btn-studentsAnswer').click(()=> {
-        studentsAnswer = studentsAnswer.getFile().file;
-        user_id = $('#user_id').val();
-        var formData = new FormData();
-        formData.append("_token", "{{ csrf_token() }}");
-        formData.append("file", studentsAnswer);
-        formData.append('user_id', user_id);
-        // set ajax
-        $.ajax({
-            url : 'http://127.0.0.1:5000/upload-jawaban',
-            type: 'POST',
-            contentType: false,
-            processData: false,
-            data: formData
-        }).then((res)=> {
-            $('#btn-studentsAnswer').hide()
-            Toastify({
-                text: "Success Scoring Essay",
-                duration: 3000,
-                close:true,
-                gravity:"top",
-                position: "center",
-                backgroundColor: "#4fbe87",
-            }).showToast();
         }).catch((res)=> {
             console.log(res)
         });

@@ -27,4 +27,6 @@ Route::prefix('admin')
             return view('dashboard.admin.index');
         })->name('admin-index');
     });
+
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/plagiarism', 'HomeController@checkPlagiarism')->name('plagiarism');

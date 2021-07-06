@@ -23,6 +23,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboard.user.index');
+        $data['titlePage'] = 'Automated Essay Scoring';
+        return view('dashboard.user.index', $data);
+    }
+
+    public function checkPlagiarism()
+    {
+        $data['titlePage'] = 'Check Plagiarism';
+        return view('dashboard.user.plagiarism', $data);
     }
 }
