@@ -13,7 +13,7 @@
     <input type="text" value="{{ Auth::user()->id}}" id="user_id" hidden>
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Upload Answer</h5>
+            <h5 class="card-title">Upload Key Answer</h5>
         </div>
         <div class="card-content">
             <div class="card-body">
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-    {{-- <div class="card">
+    <div class="card">
         <div class="card-header">
             <h5 class="card-title">Upload Students Answer</h5>
         </div>
@@ -31,10 +31,26 @@
             <div class="card-body">
                 <!-- Basic file uploader -->
                 <input type="file" class="students-answer">
-                <button type="submit" class="btn btn-info" id='btn-studentsAnswer' disabled>Submit Form</button>
+                <button type="submit" class="btn btn-info" id='btn-studentsAnswer'>Submit Form</button>
             </div>
         </div>
-    </div> --}}
+    </div>
+
+    <div class="table-responsive">
+        <table id="data-score" class="table table-striped">
+            <tr>
+                <td>Nama</td>
+                <td>Kelas</td>
+                <td>No Absen</td>
+                <td>Nilai Jawaban 1</td>
+                <td>Nilai Jawaban 2</td>
+                <td>Nilai Jawaban 3</td>
+                <td>Nilai Jawaban 4</td>
+                <td>Nilai Jawaban 5</td>
+                <td>Total Nilai</td>
+            </tr>
+        </table>
+    </div>
 </div>
 @endsection
 
@@ -106,14 +122,61 @@
             data: formData
         }).then((res)=> {
             Toastify({
-                text: "Success Created Model",
+                text: "Success Make Model",
                 duration: 3000,
                 close:true,
                 gravity:"top",
                 position: "center",
                 backgroundColor: "#4fbe87",
             }).showToast();
-            console.log(res)
+            // $.each(res.data, function(key, val){
+            //     let nilai1 = parseInt(val.jawaban1);
+            //     let nilai2 = parseInt(val.jawaban2);
+            //     let nilai3 = parseInt(val.jawaban3);
+            //     let nilai4 = parseInt(val.jawaban4);
+            //     let nilai5 = parseInt(val.jawaban5);
+            //     let totalNilai = (nilai1+nilai2+nilai3+nilai4+nilai5) * 2
+            //     $('#data-score').append(
+            //         "<tbody>"
+            //             +"<tr>"
+            //                 +"<td>"+val.nama+"</td>"
+            //                 +"<td>"+val.kelas+"</td>"
+            //                 +"<td>"+val.absen+"</td>"
+            //                 +"<td>"+val.jawaban1+"</td>"
+            //                 +"<td>"+val.jawaban2+"</td>"
+            //                 +"<td>"+val.jawaban3+"</td>"
+            //                 +"<td>"+val.jawaban4+"</td>"
+            //                 +"<td>"+val.jawaban5+"</td>"
+            //                 +"<td>"+ totalNilai +"</td>"
+            //             +"</tr>"
+            //         +"</tbody>"
+            //     )
+            // })
+
+            // // export to excel
+            // var downloadLink
+            // var dataType = "application/vnd.ms-excel"
+            // var tableSelect = document.getElementById('data-score')
+            // var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20')
+
+            // fileName = 'Score_Report.xls'
+
+            // downloadLink = document.createElement('a')
+
+            // document.body.appendChild(downloadLink)
+
+            // if(navigator.msSaveOrOpenBlob){
+            //     var blob = new Blob(['\ufeff', tableHTML], {
+            //         type: dataType
+            //     })
+            //     navigator.msSaveOrOpenBlob(blob, fileName)
+            // } else {
+            //     downloadLink.href = 'data:' + dataType + ',' + tableHTML
+
+            //     downloadLink.download = fileName
+
+            //     downloadLink.click()
+            // }
         }).catch((res)=> {
             console.log(res)
         });
@@ -143,6 +206,54 @@
                 position: "center",
                 backgroundColor: "#4fbe87",
             }).showToast();
+            $.each(res.data, function(key, val){
+                let nilai1 = parseInt(val.jawaban1);
+                let nilai2 = parseInt(val.jawaban2);
+                let nilai3 = parseInt(val.jawaban3);
+                let nilai4 = parseInt(val.jawaban4);
+                let nilai5 = parseInt(val.jawaban5);
+                let totalNilai = (nilai1+nilai2+nilai3+nilai4+nilai5) * 2
+                $('#data-score').append(
+                    "<tbody>"
+                        +"<tr>"
+                            +"<td>"+val.nama+"</td>"
+                            +"<td>"+val.kelas+"</td>"
+                            +"<td>"+val.absen+"</td>"
+                            +"<td>"+val.jawaban1+"</td>"
+                            +"<td>"+val.jawaban2+"</td>"
+                            +"<td>"+val.jawaban3+"</td>"
+                            +"<td>"+val.jawaban4+"</td>"
+                            +"<td>"+val.jawaban5+"</td>"
+                            +"<td>"+ totalNilai +"</td>"
+                        +"</tr>"
+                    +"</tbody>"
+                )
+            })
+
+            // export to excel
+            var downloadLink
+            var dataType = "application/vnd.ms-excel"
+            var tableSelect = document.getElementById('data-score')
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20')
+
+            fileName = 'Score_Report.xls'
+
+            downloadLink = document.createElement('a')
+
+            document.body.appendChild(downloadLink)
+
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                })
+                navigator.msSaveOrOpenBlob(blob, fileName)
+            } else {
+                downloadLink.href = 'data:' + dataType + ',' + tableHTML
+
+                downloadLink.download = fileName
+
+                downloadLink.click()
+            }
         }).catch((res)=> {
             console.log(res)
         });

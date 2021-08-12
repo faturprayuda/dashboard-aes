@@ -24,6 +24,23 @@
         </div>
     </div>
 </div>
+<div class="table-responsive">
+    <table id="data-score" class="table table-striped">
+        <thead>
+            <tr>
+                <td>Nama</td>
+                <td>Kelas</td>
+                <td>No Absen</td>
+                <td>Nilai Plagiarism 1</td>
+                <td>Nilai Plagiarism 2</td>
+                <td>Nilai Plagiarism 3</td>
+                <td>Nilai Plagiarism 4</td>
+                <td>Nilai Plagiarism 5</td>
+                <td>Total Plagiarism</td>
+            </tr>
+        </thead>
+    </table>
+</div>
 @endsection
 
 @section('js')
@@ -101,7 +118,54 @@
                 position: "center",
                 backgroundColor: "#4fbe87",
             }).showToast();
-            console.log(res)
+            $.each(res.data, function(key, val){
+                let nilai1 = parseInt(val.plagiarism1);
+                let nilai2 = parseInt(val.plagiarism2);
+                let nilai3 = parseInt(val.plagiarism3);
+                let nilai4 = parseInt(val.plagiarism4);
+                let nilai5 = parseInt(val.plagiarism5);
+                let totalNilai = Math.round((nilai1+nilai2+nilai3+nilai4+nilai5) / 5)
+                $('#data-score').append(
+                    "<tbody>"
+                        +"<tr>"
+                            +"<td>"+val.nama+"</td>"
+                            +"<td>"+val.kelas+"</td>"
+                            +"<td>"+val.absen+"</td>"
+                            +"<td>"+val.plagiarism1+"</td>"
+                            +"<td>"+val.plagiarism2+"</td>"
+                            +"<td>"+val.plagiarism3+"</td>"
+                            +"<td>"+val.plagiarism4+"</td>"
+                            +"<td>"+val.plagiarism5+"</td>"
+                            +"<td>"+ totalNilai +"</td>"
+                        +"</tr>"
+                    +"</tbody>"
+                )
+            })
+
+            // export to excel
+            var downloadLink
+            var dataType = "application/vnd.ms-excel"
+            var tableSelect = document.getElementById('data-score')
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20')
+
+            fileName = 'Plagiarism_Report.xls'
+
+            downloadLink = document.createElement('a')
+
+            document.body.appendChild(downloadLink)
+
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                })
+                navigator.msSaveOrOpenBlob(blob, fileName)
+            } else {
+                downloadLink.href = 'data:' + dataType + ',' + tableHTML
+
+                downloadLink.download = fileName
+
+                downloadLink.click()
+            }
         }).catch((res)=> {
             console.log(res)
         });
